@@ -1,6 +1,6 @@
 {
-	"parent": "lptwo:item/lpitembase",
-	"textures":{
-		"layer0": "lptwo:items/ingot_titanium"
-	}
+  "parent": "lptwo:item/lpitembase",
+  "textures": {
+    "layer0": "lptwo:items/ingot_titanium"
+  }
 }

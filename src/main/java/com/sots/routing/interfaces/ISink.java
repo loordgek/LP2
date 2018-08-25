@@ -1,5 +1,7 @@
 package com.sots.routing.interfaces;
 
-public interface ISink {
+public interface ISink<T> {
+
+    boolean canAcsepped(Object o);
 
 }

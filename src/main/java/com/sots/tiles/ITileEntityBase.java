@@ -8,9 +8,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface ITileEntityBase {
-	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ);
-	
-	public void breakBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player);
-	
-	public void markForUpdate();
+    boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ);
+
+    void breakBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player);
+
+    void markForUpdate();
 }

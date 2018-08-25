@@ -4,20 +4,30 @@
     "model": "forge:multi-layer",
     "transform": "forge:default-block",
     "custom": {
-    	"base": "lptwo:pipe_basic#normal",
-    	"Solid": "lptwo:pipe_basic#normal",
-    	"Translucent": "lptwo:pipe_basic#glass"
+      "base": "lptwo:pipe_basic#normal",
+      "Solid": "lptwo:pipe_basic#normal",
+      "Translucent": "lptwo:pipe_basic#glass"
     }
   },
   "variants": {
-    "normal": [{
-    	"model": "lptwo:pipe_basic.obj",
-    	"custom": {"flip-v": true}
-    }],
-    "glass": [{
-    	"model": "lptwo:pipe_glass.obj",
-    	"custom": {"flip-v": true}
-    }],
-    "inventory": [{}]
+    "normal": [
+      {
+        "model": "lptwo:pipe_basic.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
+    "glass": [
+      {
+        "model": "lptwo:pipe_glass.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
+    "inventory": [
+      {}
+    ]
   }
 }
