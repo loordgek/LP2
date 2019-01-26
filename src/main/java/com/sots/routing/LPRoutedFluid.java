@@ -78,9 +78,7 @@ public class LPRoutedFluid extends LPRoutedObject<FluidStack> {
     }
 
     @Override
-    public void spawnInWorld(World world, double x, double y, double z) {
-        world.spawnEntity(new EntityItem(world, x, y, z, UniversalBucket.getFilledBucket(new UniversalBucket(), getContent().getFluid())));
-    }
+    public void spawnInWorld(World world, double x, double y, double z) { }
 
     @Override
     public void putInBlock(TileEntity te) {

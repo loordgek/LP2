@@ -36,11 +36,6 @@ public class FluidStackResource implements IResource<FluidStack> {
     }
 
     @Override
-    public boolean canSentToCrafer(INetwork network, int amount) {
-        return false;
-    }
-
-    @Override
     public boolean sentToCrafter(INetwork network, UUID pipeID, UUID augmentID, RequestNode node, int amount) {
         return false;
     }

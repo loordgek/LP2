@@ -11,7 +11,7 @@ import java.util.List;
 public class WidgetIResource extends Widget {
     private final IResource resource;
     public WidgetIResource(int x, int y, int width, int height, IResource resource,int widgetID) {
-        super(x, y, width, height, widgetManager, widgetID);
+        super(x, y, width, height, widgetID);
         this.resource = resource;
     }
 

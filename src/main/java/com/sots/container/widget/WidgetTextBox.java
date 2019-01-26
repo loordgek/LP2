@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WidgetTextBox extends Widget {
     private final GuiTextField field;
     public WidgetTextBox(int x, int y, int width, int height, int widgetID) {
-        super(x, y, width, height, widgetManager, widgetID);
+        super(x, y, width, height, widgetID);
         field = new GuiTextField(widgetID, Minecraft.getMinecraft().fontRenderer, x, y, width, height);
     }
 
@@ -32,7 +32,7 @@ public class WidgetTextBox extends Widget {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode) {
+    public void keyTyped(char typedChar, int keyCode, boolean keyPressed, EntityPlayer player, LPSide side) {
         field.textboxKeyTyped(typedChar, keyCode);
     }
 }

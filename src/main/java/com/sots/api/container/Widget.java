@@ -64,9 +64,7 @@ public class Widget implements IWidget {
     public void onMouseDrag(int mouseX, int mouseY, EnumMouseButton button, long timeSinceLastClick, EntityPlayer player, Set<IWidget> draggedWidgets, LPSide side) { }
 
     @Override
-    public void mouseReleased(int mouseX, int mouseY, int state) {
-
-    }
+    public void mouseReleased(int mouseX, int mouseY, int state) { }
 
     @Override
     public void onWidgetClosed(EntityPlayer player) {}
@@ -78,7 +76,7 @@ public class Widget implements IWidget {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode) { }
+    public void keyTyped(char typedChar, int keyCode, boolean keyPressed, EntityPlayer player, LPSide side) { }
 
     @Nullable
     public IWidget getParent() {

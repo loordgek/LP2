@@ -8,5 +8,6 @@ public interface IPipe {
 
     boolean hasAdjacent();
 
-    boolean catchItem(LPRoutedObject item);
+    boolean catchObject(LPRoutedObject item);
+
 }

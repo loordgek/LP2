@@ -17,11 +17,6 @@ public abstract class Module implements IModule {
     }
 
     @Override
-    public boolean canInsert() {
-        return false;
-    }
-
-    @Override
     public final NBTTagCompound serializeNBT() {
         return writeToNBT(new NBTTagCompound());
     }

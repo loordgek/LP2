@@ -12,8 +12,6 @@ public interface ICraftingTemplate<T> {
 
     List<IResource> getIngredients();
 
-    List<IResource> getToolsUsed();
-
     int getPriority();
 
 }

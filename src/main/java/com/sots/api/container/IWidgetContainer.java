@@ -10,7 +10,4 @@ public interface IWidgetContainer extends IWidget {
     void addWidget(IWidget widget);
 
     IWidget getWidget(int index);
-
-    WidgetManager getWidgetManager();
-
 }

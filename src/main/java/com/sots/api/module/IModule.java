@@ -3,7 +3,6 @@ package com.sots.api.module;
 import com.sots.api.INetwork;
 import com.sots.api.LPRoutedObject;
 import com.sots.api.container.IWidgetContainer;
-import com.sots.api.container.WidgetManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -46,11 +45,11 @@ public interface IModule extends ICapabilitySerializable<NBTTagCompound> {
         return null;
     }
 
-    default boolean hasGiuComponent(){
+    default boolean hasGuiComponent(){
         return false;
     }
 
-    default IWidgetContainer getGuiComponent(EntityPlayer player, WidgetManager manager){
+    default IWidgetContainer getGuiComponent(EntityPlayer player){
         return null;
     }
 

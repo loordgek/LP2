@@ -227,7 +227,7 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
                     if (getConnection(item.getHeading()) == ConnectionTypes.PIPE) {
                         IPipe pipe = (IPipe) world.getTileEntity(getPos().offset(item.getHeading()));
                         if (pipe != null) {
-                            if (!pipe.catchItem(item)) {
+                            if (!pipe.catchObject(item)) {
                                 if (!world.isRemote) {
                                     item.spawnInWorld(world, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5);
                                     //world.spawnEntity(new EntityItem(world, pos.getX()+0.5, pos.getY()+1.5, pos.getZ()+0.5, item.getContent()));
@@ -428,7 +428,9 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player) {}
 
-    public boolean catchItem(LPRoutedObject item) {
+
+
+    public boolean catchObject(LPRoutedObject item) {
         try {
             contents.add(item);
             item.ticks = 0;
@@ -442,7 +444,7 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
 
     private boolean passItem(TileGenericPipe pipe, LPRoutedItem item) {
         if (pipe != null && item != null) {
-            return pipe.catchItem(item);
+            return pipe.catchObject(item);
         }
         return false;
     }
@@ -475,7 +477,7 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
                 if (!route.getRoute().isComplete()) {
                     continue;
                 }
-                catchItem(LPRoutedObject.makeLPRoutedObjectFromContent(this, route));
+                catchObject(LPRoutedObject.makeLPRoutedObjectFromContent(this, route));
                 i.remove();
                 // TODO: 21-2-2018 make this config
                 break; // This line makes it so, that only 1 item is routed pr. tick. Comment out this line to allow multiple items to be routed pr. tick.

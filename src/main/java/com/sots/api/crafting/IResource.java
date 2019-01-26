@@ -19,7 +19,5 @@ public interface IResource<T> {
 
     void onResourceClicked(EntityPlayer player);
 
-    boolean canSentToCrafer(INetwork network, int amount);
-
     boolean sentToCrafter(INetwork network, UUID pipeID, UUID augmentID, RequestNode node, int amount);
 }

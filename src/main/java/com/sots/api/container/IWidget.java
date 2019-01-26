@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +57,7 @@ public interface IWidget {
         return getBounds().getHeight();
     }
 
-    void keyTyped(char typedChar, int keyCode);
+    void keyTyped(char typedChar, int keyCode, boolean keyPressed, EntityPlayer player, LPSide side);
 
     @Nullable
     IWidget getParent();

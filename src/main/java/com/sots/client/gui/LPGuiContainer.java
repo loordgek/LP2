@@ -11,8 +11,11 @@ import com.sots.network.message.MessageWidgetClicked;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -72,7 +75,7 @@ public class LPGuiContainer extends GuiContainer {
                 .forEach(widget -> {
                     if (widget.sendToServer())
                         LPPacketHandler.INSTANCE.sendToServer(new MessageDragOverWidget());
-                    widget.onMouseDrag(mouseX ,mouseY, EnumMouseButton.getEnumButtonFromID(clickedMouseButton), timeSinceLastClick, clientPlayer(), draggedWidgets, LPSide.CLIENT);
+                    widget.onMouseDrag(mouseX, mouseY, EnumMouseButton.getEnumButtonFromID(clickedMouseButton), timeSinceLastClick, clientPlayer(), draggedWidgets, LPSide.CLIENT);
                     draggedWidgets.add(widget);
 
                 });
@@ -105,7 +108,7 @@ public class LPGuiContainer extends GuiContainer {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        lpContainer.widgets.forEach(widget -> widget.keyTyped(typedChar, keyCode));
+        lpContainer.keyTyped(typedChar, keyCode, Keyboard.getEventKeyState(), clientPlayer());
         super.keyTyped(typedChar, keyCode);
     }
 

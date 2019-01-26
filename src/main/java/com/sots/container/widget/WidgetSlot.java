@@ -86,8 +86,9 @@ public class WidgetSlot extends Widget {
                 if (mouseStack.isEmpty())
                     inventoryPlayer.setItemStack(ItemStack.EMPTY);
             }
+            return;
         }
-        else if (!getStack().isEmpty()){
+        if (!getStack().isEmpty()){
             int amountToExtract = 0;
             if (button.isLeftClick())
                 amountToExtract = Math.min(getStack().getCount(), getStack().getMaxStackSize());
@@ -96,8 +97,9 @@ public class WidgetSlot extends Widget {
             ItemStack extract = extract(amountToExtract);
             if (!isPhantomSlot() && !extract.isEmpty())
                 inventoryPlayer.setItemStack(extract);
+            return;
         }
-        else if (button.isMiddelClick() && !getStack().isEmpty()){
+        if (button.isMiddleClick() && !getStack().isEmpty()){
             if (player.isCreative()){
                 inventoryPlayer.setItemStack(ItemHandlerHelper.copyStackWithSize(getStack(), getStack().getMaxStackSize()));
             }

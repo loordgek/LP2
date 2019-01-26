@@ -71,7 +71,7 @@ public class RequestNode {
         } else getRoot().cancel();
     }
 
-    private void cancelIntarnel() {
+    protected void cancelIntarnel() {
         supRequests.forEach(RequestNode::cancelIntarnel);
         onRoute.forEach(LPRoutedObject::cancel);
     }

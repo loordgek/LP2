@@ -3,7 +3,6 @@ package com.sots.container.widget;
 import com.sots.api.container.IWidget;
 import com.sots.api.container.IWidgetContainer;
 import com.sots.api.container.Widget;
-import com.sots.api.container.WidgetManager;
 import com.sots.api.util.EnumMouseButton;
 import com.sots.api.util.LPSide;
 import com.sots.network.LPPacketHandler;
@@ -15,15 +14,13 @@ import java.util.List;
 
 public class WidgetContainer extends Widget implements IWidgetContainer {
     List<IWidget> widgets = new ArrayList<>();
-    public WidgetContainer(int x, int y, int width, int height, int widgetID, LPSide side, WidgetManager widgetManager) {
-        super(x, y, width, height, widgetManager, widgetID);
+    public WidgetContainer(int x, int y, int width, int height, int widgetID, LPSide side) {
+        super(x, y, width, height, widgetID);
         init(side);
     }
 
     @Override
-    public void init(LPSide side) {
-
-    }
+    public void init(LPSide side) { }
 
     @Override
     public final boolean sendToServer() {
@@ -36,8 +33,8 @@ public class WidgetContainer extends Widget implements IWidgetContainer {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode) {
-        widgets.forEach(widget -> widget.keyTyped(typedChar, keyCode));
+    public void keyTyped(char typedChar, int keyCode, boolean keyPressed, EntityPlayer player, LPSide side) {
+        widgets.forEach(widget -> widget.keyTyped(typedChar, keyCode, keyPressed, player, side));
     }
 
     @Override

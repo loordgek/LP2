@@ -9,12 +9,12 @@ import net.minecraft.entity.player.EntityPlayer;
 public class WidgetButton extends Widget {
     private final IWidgetButtonListener listener;
     public WidgetButton(int x, int y, int width, int height, int widgetID, IWidgetButtonListener listener) {
-        super(x, y, width, height, widgetManager, widgetID);
+        super(x, y, width, height, widgetID);
         this.listener = listener;
     }
 
     @Override
     public void onClicked(int mouseX, int mouseY, EnumMouseButton button, boolean shiftDown, EntityPlayer player, LPSide side) {
-        listener.onWidgetClicked(this, player);
+        listener.onWidgetClicked(this, button, player);
     }
 }
