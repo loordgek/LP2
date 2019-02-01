@@ -6,28 +6,27 @@ import com.sots.tiles.TileRoutedPipe;
 import com.sots.util.References;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.state.IProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.ExtendedStateContainer;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -37,16 +36,13 @@ public class PipeRouted extends BlockGenericPipe {
 
     public PipeRouted() {
         super(Material.IRON);
-        setUnlocalizedName(References.NAME_PIPE_ROUTED);
         setRegistryName(References.RN_PIPE_ROUTED);
         setCreativeTab(CreativeTabs.TRANSPORTATION);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-
+    public String getTranslationKey() {
+        return References.NAME_PIPE_ROUTED;
     }
 
     @Override
@@ -58,7 +54,7 @@ public class PipeRouted extends BlockGenericPipe {
 
 
     @Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+    public void onNeighborChange(IBlockReader world, BlockPos pos, BlockPos neighbor) {
         ((TileRoutedPipe) world.getTileEntity(pos)).getAdjacentPipes(world);
     }
 
@@ -69,7 +65,7 @@ public class PipeRouted extends BlockGenericPipe {
     }
 
     @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public IBlockState getExtendedState(IBlockState state, IBlockReader world, BlockPos pos) {
         if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileRoutedPipe) {
             TileRoutedPipe te = (TileRoutedPipe) world.getTileEntity(pos);
             te.checkConnections(world, pos);
@@ -84,18 +80,17 @@ public class PipeRouted extends BlockGenericPipe {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
-        return false;
-    }
-
-    @Override
     public boolean isBlockNormalCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isNormalCube(IBlockState state, IBlockReader world, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    public boolean doesSideBlockRendering(IBlockState state, IWorldReader world, BlockPos pos, EnumFacing face) {
         return false;
     }
 
@@ -105,23 +100,30 @@ public class PipeRouted extends BlockGenericPipe {
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
-        return 0;
-    }
-
-    @Override
     public boolean hasTileEntity(IBlockState state) {
         return true;
     }
 
-    @Override
+/*    @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileRoutedPipe();
+    }*/
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(IBlockState state, IBlockReader world) {
+        return null;
     }
 
-    @Override
+    /*    @Override
     public BlockStateContainer createBlockState() {
-        return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[]{Properties.AnimationProperty});
+        return new ExtendedBlockState(this, );
+    }*/
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+        super.fillStateContainer(builder);
+        //new ExtendedStateContainer<>(this, builder, new IProperty[0], new IUnlistedProperty[]{Properties.AnimationProperty})
     }
 
     @Override
@@ -145,18 +147,5 @@ public class PipeRouted extends BlockGenericPipe {
         if (world.getTileEntity(pos.east()) instanceof TileGenericPipe) {
             ((TileGenericPipe) world.getTileEntity(pos.east())).getAdjacentPipes(world);
         }
-    }
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-                                    EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
-        super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY);
-
-        return true;
-    }
-
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return super.getBoundingBox(state, source, pos);
     }
 }

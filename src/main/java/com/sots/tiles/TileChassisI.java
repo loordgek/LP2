@@ -2,8 +2,13 @@ package com.sots.tiles;
 
 import com.sots.routing.interfaces.IPipe;
 import com.sots.routing.interfaces.IRoutable;
+import net.minecraft.tileentity.TileEntityType;
 
 public class TileChassisI extends TileGenericPipe implements IPipe, IRoutable {
+
+    public TileChassisI(TileEntityType<?> tileEntityTypeIn) {
+        super(tileEntityTypeIn);
+    }
 
     @Override
     public boolean isRouted() {

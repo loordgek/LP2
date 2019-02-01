@@ -1,12 +1,18 @@
 package com.sots.tiles;
 
 import com.sots.util.Connections;
+import com.sots.util.holder.TileHolder;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 
 import java.util.ArrayList;
 
 public class TileBasicPipe extends TileGenericPipe {
+
+    public TileBasicPipe() {
+        super(TileHolder.TILE_BASIC_PIPE);
+    }
 
     @Override
     public boolean isRouted() {
@@ -33,7 +39,7 @@ public class TileBasicPipe extends TileGenericPipe {
         return 0;
     }
 
-    public ArrayList<String> checkConnections(IBlockAccess world, BlockPos pos) {
+    public ArrayList<String> checkConnections(IBlockReader world, BlockPos pos) {
         ArrayList<String> hidden = new ArrayList<String>();
         if (down != ConnectionTypes.PIPE) {
             hidden.add(Connections.DOWN.toString());

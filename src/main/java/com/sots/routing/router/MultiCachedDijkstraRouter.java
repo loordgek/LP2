@@ -55,7 +55,7 @@ public class MultiCachedDijkstraRouter {
                         .filter(p -> p.isRouteFor(s.getId(), t.getId()) && p.isComplete() && p.getWeight() != 0)
                         .findFirst().get();
                 if (cachedRoute != null) {
-                    LogisticsPipes2.logger.info("Getting route from cache");
+                    LogisticsPipes2.LOGGER.info("Getting route from cache");
                     return cachedRoute;
                 }
             }
@@ -68,7 +68,7 @@ public class MultiCachedDijkstraRouter {
 			return new Tuple<Boolean, Triple<NetworkNode, NetworkNode, Deque<EnumFacing>>>(true, new Triple<NetworkNode, NetworkNode, Deque<EnumFacing>>(s, t, cache.get(input)));
 		}*/
 
-        LogisticsPipes2.logger.info("Calculating new route");
+        LogisticsPipes2.LOGGER.info("Calculating new route");
         return doActualRouting(s, t);
     }
 
@@ -93,7 +93,7 @@ public class MultiCachedDijkstraRouter {
         if (junctions.containsKey(t.getId())) {
             target = junctions.get(t.getId());
         } else {
-            LogisticsPipes2.logger.info("You tried routing to a node, which was not a destination or junction.");
+            LogisticsPipes2.LOGGER.info("You tried routing to a node, which was not a destination or junction.");
             return null;
         }
 
@@ -121,12 +121,12 @@ public class MultiCachedDijkstraRouter {
                                         if (junctions.containsKey(neighbor.getId())) {
                                             WeightedNetworkNode neighborW = junctions.get(neighbor.getId());
                                             neighborW.p_cost = current.p_cost + 1;
-                                            neighborW.parent = new Tuple<>(current, EnumFacing.getFront(i));
+                                            neighborW.parent = new Tuple<>(current, EnumFacing.byIndex(i));
                                             unvisited.add(neighborW);
                                         } else {
                                             if (!(unvisitedNonWeighted.contains(neighbor) || visitedNonWeighted.contains(neighbor))) {
                                                 neighbor.p_cost = current.p_cost + 1;
-                                                neighbor.parent = new Tuple<>(current, EnumFacing.getFront(i));
+                                                neighbor.parent = new Tuple<>(current, EnumFacing.byIndex(i));
                                                 unvisitedNonWeighted.add(neighbor);
                                             }
                                         }
@@ -158,7 +158,7 @@ public class MultiCachedDijkstraRouter {
                                     }
                                     if (current.p_cost + distance < neighbor.p_cost) {
                                         neighbor.p_cost = current.p_cost + distance;
-                                        neighbor.parent = new Tuple<>(current, EnumFacing.getFront(i));
+                                        neighbor.parent = new Tuple<>(current, EnumFacing.byIndex(i));
                                     }
                                 }
 
@@ -191,7 +191,7 @@ public class MultiCachedDijkstraRouter {
                             //result.weightFromStack();
                             //result.setCompletion(true);
                             //cache.add(result);
-                            LogisticsPipes2.logger.info("Done routing for now " + start + "-" + target);
+                            LogisticsPipes2.LOGGER.info("Done routing for now " + start + "-" + target);
                             sources.remove(start.getId());
                             return null;
                         });

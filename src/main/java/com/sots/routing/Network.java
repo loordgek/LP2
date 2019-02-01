@@ -48,9 +48,9 @@ public class Network {
             networkSimplifier.shutdown();
             networkSimplifier.rescanNetwork(nodes, destinations, junctions);
             getNodeByID(in).setAsDestination(true);
-            LogisticsPipes2.logger.log(Level.INFO, "Registered destination [" + in + "] in network [" + name + "]");
+            LogisticsPipes2.LOGGER.log(Level.INFO, "Registered destination [" + in + "] in network [" + name + "]");
         } else {
-            LogisticsPipes2.logger.log(Level.WARN, "Tried to register destination [" + in + "] twice in network [" + name + "]");
+            LogisticsPipes2.LOGGER.log(Level.WARN, "Tried to register destination [" + in + "] twice in network [" + name + "]");
         }
     }
 
@@ -60,9 +60,9 @@ public class Network {
             networkSimplifier.shutdown();
             networkSimplifier.rescanNetwork(nodes, destinations, junctions);
             getNodeByID(out).setAsDestination(false);
-            LogisticsPipes2.logger.log(Level.INFO, "Unregistered destination [" + out + "] in network [" + name + "]");
+            LogisticsPipes2.LOGGER.log(Level.INFO, "Unregistered destination [" + out + "] in network [" + name + "]");
         } else {
-            LogisticsPipes2.logger.log(Level.WARN, "Tried to unregister destination [" + out + "] twice in network [" + name + "]");
+            LogisticsPipes2.LOGGER.log(Level.WARN, "Tried to unregister destination [" + out + "] twice in network [" + name + "]");
         }
     }
 
@@ -202,7 +202,7 @@ public class Network {
         }
         for (LogisticsRoute route : routes) {
             while (!route.isComplete()) {
-                LogisticsPipes2.logger.log(Level.INFO, "IncompleteRouteSkipped");
+                LogisticsPipes2.LOGGER.log(Level.INFO, "IncompleteRouteSkipped");
             }
         }
 

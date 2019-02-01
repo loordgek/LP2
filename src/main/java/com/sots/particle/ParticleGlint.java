@@ -28,15 +28,15 @@ public class ParticleGlint extends Particle implements ILP2Particle {
         if (this.colorB > 1.0) {
             this.colorB = this.colorB / 255.0f;
         }
-        this.setRBGColorF(colorR, colorG, colorB);
-        this.particleMaxAge = (int) ((float) lifetime * 0.5f);
+        this.setColor(colorR, colorG, colorB);
+        this.maxAge = (int) ((float) lifetime * 0.5f);
         this.particleScale = scale;
         this.initScale = scale;
         this.motionX = vx;
         this.motionY = vy;
         this.motionZ = vz;
         this.particleAngle = 2.0f * (float) Math.PI;
-        TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.toString());
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMap().getAtlasSprite(texture.toString());
         this.setParticleTexture(sprite);
     }
 
@@ -51,19 +51,19 @@ public class ParticleGlint extends Particle implements ILP2Particle {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
         if (Misc.rand.nextInt(6) == 0) {
-            this.particleAge++;
+            this.age++;
         }
-        float lifeCovfefe = (float) this.particleAge / (float) this.particleMaxAge;
+        float lifeCovfefe = (float) this.age / (float) this.maxAge;
         this.particleScale = initScale - initScale * lifeCovfefe;
         particleAngle += 1.0f;
     }
 
     @Override
     public boolean alive() {
-        return this.particleAge < this.particleMaxAge;
+        return this.age < this.maxAge;
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.sots.routing.interfaces;
 
 import com.sots.api.LPRoutedObject;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 
 public interface IPipe {
-    void getAdjacentPipes(IBlockAccess world);
+    void getAdjacentPipes(IBlockReader world);
 
     boolean hasAdjacent();
 

@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -41,13 +41,6 @@ public class PipeBasic extends BlockGenericPipe {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-
-    }
-
-    @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
         ((TileBasicPipe) world.getTileEntity(pos)).getAdjacentPipes(world);
         world.getTileEntity(pos).markDirty();
@@ -55,7 +48,7 @@ public class PipeBasic extends BlockGenericPipe {
 
 
     @Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+    public void onNeighborChange(IBlockReader world, BlockPos pos, BlockPos neighbor) {
         ((TileBasicPipe) world.getTileEntity(pos)).getAdjacentPipes(world);
     }
 
@@ -66,7 +59,7 @@ public class PipeBasic extends BlockGenericPipe {
     }
 
     @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public IBlockState getExtendedState(IBlockState state, IBlockReader world, BlockPos pos) {
         if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileBasicPipe) {
             TileBasicPipe te = (TileBasicPipe) world.getTileEntity(pos);
             ArrayList<String> check = te.checkConnections(world, pos);
@@ -82,7 +75,7 @@ public class PipeBasic extends BlockGenericPipe {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockReader worldIn, BlockPos pos, EnumFacing side) {
         return false;
     }
 
@@ -172,7 +165,7 @@ public class PipeBasic extends BlockGenericPipe {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockReader source, BlockPos pos) {
         return super.getBoundingBox(state, source, pos);
     }
 }

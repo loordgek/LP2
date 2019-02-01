@@ -1,20 +1,23 @@
 package com.sots.tiles;
 
-import com.sots.routing.interfaces.IPipe;
-import com.sots.routing.interfaces.IRoutable;
 import com.sots.util.Connections;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class TileChassisMkI extends TileGenericPipe implements IPipe, IRoutable {
+public class TileChassisMkI extends TileGenericPipe {
 
-    public ArrayList<String> checkConnections(IBlockAccess world, BlockPos pos) {
+    public TileChassisMkI(TileEntityType<?> tileEntityTypeIn) {
+        super(tileEntityTypeIn);
+    }
+
+    public ArrayList<String> checkConnections(IBlockReader world, BlockPos pos) {
         ArrayList<String> hidden = new ArrayList<>();
         if (down != ConnectionTypes.BLOCK) {
             hidden.add(Connections.C_DOWN.toString());
@@ -73,41 +76,6 @@ public class TileChassisMkI extends TileGenericPipe implements IPipe, IRoutable 
     @Override
     public int powerConsumed() {
         return 1;
-    }
-
-    @Override
-    protected void network() {
-        super.network();
-        if (this.hasNetwork) {
-            for (int i = 0; i < 6; i++) {
-                if (hasInventoryOnSide(i)) {
-                    network.registerDestination(this.nodeID, EnumFacing.getFront(i));
-                    break;
-                }
-
-            }
-        }
-    }
-
-    @Override
-    public void update() {
-        super.update();
-        if (this.hasNetwork && !(network.getNodeByID(this.nodeID).isDestination())) {
-            for (int i = 0; i < 6; i++) {
-                if (hasInventoryOnSide(i)) {
-                    network.registerDestination(this.nodeID, EnumFacing.getFront(i));
-                    break;
-                }
-            }
-        } else if (this.hasNetwork && (network.getNodeByID(this.nodeID).isDestination())) {
-            boolean hasInv = false;
-            for (int i = 0; i < 6; i++) {
-                if (hasInventoryOnSide(i))
-                    hasInv = true;
-            }
-            if (!hasInv)
-                network.unregisterDestination(this.nodeID);
-        }
     }
 
     @Override

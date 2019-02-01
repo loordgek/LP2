@@ -26,16 +26,16 @@ public class CachedDijkstraRouter extends DijkstraRouter {
         Tuple<NetworkNode, NetworkNode> input = new Tuple<>(s, t);
         try { //DEBUG
             if (cache.containsKey(input)) {
-                LogisticsPipes2.logger.info("Got a route from cache"); //DEBUG
+                LogisticsPipes2.LOGGER.info("Got a route from cache"); //DEBUG
                 return cache.get(input);
             }
         } catch (Exception e) {
-            LogisticsPipes2.logger.info(e); //DEBUG
+            LogisticsPipes2.LOGGER.info(e); //DEBUG
         }
 
 
         Triple<NetworkNode, NetworkNode, ArrayDeque<Tuple<UUID, EnumFacing>>> result = super.route(s, t);
-        LogisticsPipes2.logger.info("Caching a route to cache"); //DEBUG
+        LogisticsPipes2.LOGGER.info("Caching a route to cache"); //DEBUG
         cache.put(input, result);
         return result;
     }
@@ -43,7 +43,7 @@ public class CachedDijkstraRouter extends DijkstraRouter {
     @Override
     public void shutdown() {
         super.shutdown();
-        LogisticsPipes2.logger.info("Clearing cache"); //DEBUG
+        LogisticsPipes2.LOGGER.info("Clearing cache"); //DEBUG
         cache.clear();
     }
 

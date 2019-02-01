@@ -9,9 +9,4 @@ public class WidgetEnum<E extends Enum<E>> extends Widget {
         super(x, y, width, height, widgetID);
         this.listener = listener;
     }
-
-    @Override
-    public void onScrollWheel(int wheel, int mouseX, int mouseY, boolean shiftDown) {
-        super.onScrollWheel(wheel, mouseX, mouseY, shiftDown);
-    }
 }

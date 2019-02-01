@@ -1,6 +1,5 @@
 package com.sots.tiles;
 
-import com.sots.EventHandler;
 import com.sots.LogisticsPipes2;
 import com.sots.api.LPRoutedObject;
 import com.sots.particle.ParticleUtil;
@@ -16,17 +15,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
@@ -48,9 +48,13 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
     //private volatile Set<LPRoutedFluid> contents_fluid = new HashSet<LPRoutedFluid>();
     private List<PendingToRoute> waitingToRoute = new ArrayList<>();
 
+    public TileGenericPipe(TileEntityType<?> tileEntityTypeIn) {
+        super(tileEntityTypeIn);
+    }
+
     @Override
     public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
+        return write(new NBTTagCompound());
     }
 
     @Override
@@ -60,29 +64,29 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        this.readFromNBT(packet.getNbtCompound());
+        this.read(packet.getNbtCompound());
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
         if (compound.hasKey("contents")) {
             NBTTagList list = (NBTTagList) compound.getTag("contents");
             contents.clear();
-            for (NBTBase aList : list) {
+            for (INBTBase aList : list) {
                 contents.add(LPRoutedObject.readFromNBT((NBTTagCompound) aList, this));
             }
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound = super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        compound = super.write(compound);
         NBTTagList list = new NBTTagList();
         for (LPRoutedObject lpri : contents) {
-            list.appendTag(lpri.writeToNBT());
+            list.add(lpri.writeToNBT());
         }
-        if (!list.hasNoTags()) {
+        if (!list.isEmpty()) {
             compound.setTag("contents", list);
         }
         return compound;
@@ -113,14 +117,14 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
 
     @Override
     public void subscribe(Network parent) {
-        LogisticsPipes2.logger.log(Level.DEBUG, "Subscribed TileGenericPipe" + toString() + " to Network:" + parent.getName());
+        LogisticsPipes2.LOGGER.log(Level.DEBUG, "Subscribed TileGenericPipe" + toString() + " to Network:" + parent.getName());
         network = parent;
         hasNetwork = true;
     }
 
     @Override
     public void disconnect() {
-        LogisticsPipes2.logger.log(Level.DEBUG, "Removed TileGenericPipe" + toString() + " from Network:" + network.getName());
+        LogisticsPipes2.LOGGER.log(Level.DEBUG, "Removed TileGenericPipe" + toString() + " from Network:" + network.getName());
         hasNetwork = false;
         network = null;
     }
@@ -141,7 +145,7 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
     }
 
     @Override
-    public void getAdjacentPipes(IBlockAccess world) {
+    public void getAdjacentPipes(IBlockReader world) {
         up = getConnection(world, getPos().up(), EnumFacing.UP);
         down = getConnection(world, getPos().down(), EnumFacing.DOWN);
         north = getConnection(world, getPos().north(), EnumFacing.NORTH);
@@ -186,10 +190,10 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
         }
     }
 
-    public ConnectionTypes getConnection(IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public ConnectionTypes getConnection(IBlockReader world, BlockPos pos, EnumFacing side) {
 
-        if (getConnection(side) == ConnectionTypes.FORCENONE) {
-            return ConnectionTypes.FORCENONE;
+        if (getConnection(side) == ConnectionTypes.FORCE_NONE) {
+            return ConnectionTypes.FORCE_NONE;
         }
 
         TileEntity tile = world.getTileEntity(pos);
@@ -200,14 +204,14 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
     }
 
     @Override
-    public void invalidate() {
-        super.invalidate();
+    public void remove() {
+        super.remove();
         if (network != null)
             network.purgeNetwork();
     }
 
     @Override
-    public void update() {
+    public void tick() {
         getAdjacentPipes(world);
         if (!world.isRemote) {
             if (!hasNetwork) {
@@ -247,7 +251,7 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
                                 if (item.getDestination() != null && network.getAllDestinations().contains(item.getDestination().nodeID)) {
                                     routeObject(item.getDestination().nodeID, item.getModuleID(), item.getContent(), item.getHeading().getOpposite(), PromiseType.PROMISE_SINK);
                                 } else {
-                                    LogisticsPipes2.logger.info(item.getHeading()); //DEBUG
+                                    LogisticsPipes2.LOGGER.debug(item.getHeading()); //DEBUG
                                     if (!world.isRemote) {
                                         item.spawnInWorld(world, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5);
                                     }
@@ -279,7 +283,7 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
                 if (target.hasNetwork() && !hasNetwork) {
                     //LogisticsPipes2.logger.log(Level.INFO, String.format("Attempting to connect Generic Pipe %1$s %2$s to %3$s %4$s", nodeID.toString(), (hasNetwork ? " with network" : " without network"), target.getBlockType().toString(), (target.hasNetwork ? " with network." : " without network.")));
                     nodeID = target.network.subscribeNode(this);//Subscribe to network
-                    LogisticsPipes2.logger.log(Level.INFO, "Added TileGenericPipe " + nodeID.toString() + " to Network: " + network.getName());
+                    LogisticsPipes2.LOGGER.log(Level.INFO, "Added TileGenericPipe " + nodeID.toString() + " to Network: " + network.getName());
                     hasNetwork = true;
 
                     network.getNodeByID(target.nodeID).addNeighbor(network.getNodeByID(nodeID), direction.getOpposite().getIndex());//Tell target node he has a new neighbor
@@ -289,7 +293,7 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
                 }
                 //Notify other Neighbors of our presence
                 if (target.hasNetwork && hasNetwork) {
-                    LogisticsPipes2.logger.log(Level.INFO, "Notified GenericPipe " + target.nodeID.toString() + " of presence of: " + nodeID.toString());
+                    LogisticsPipes2.LOGGER.log(Level.INFO, "Notified GenericPipe " + target.nodeID.toString() + " of presence of: " + nodeID.toString());
                     network.getNodeByID(target.nodeID).addNeighbor(network.getNodeByID(nodeID), direction.getOpposite().getIndex());//Tell target node he has a new neighbor
                     network.getNodeByID(nodeID).addNeighbor(network.getNodeByID(target.nodeID), direction.getIndex());//Add the Target as my neighbor
                     network.recalculateNetwork();
@@ -357,10 +361,10 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
     }
 
     protected ConnectionTypes forceConnection(ConnectionTypes con) {
-        if (con == ConnectionTypes.FORCENONE) {
+        if (con == ConnectionTypes.FORCE_NONE) {
             return ConnectionTypes.NONE;
         } else {
-            return ConnectionTypes.FORCENONE;
+            return ConnectionTypes.FORCE_NONE;
         }
     }
 
@@ -428,7 +432,10 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player) {}
 
+    @Override
+    public void markForUpdate() {
 
+    }
 
     public boolean catchObject(LPRoutedObject item) {
         try {
@@ -454,15 +461,10 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
     }
 
     @Override
-    public void markForUpdate() {
-        EventHandler.markTEForUpdate(this.getPos(), this);
-    }
-
-    @Override
     public boolean routeObject(UUID targetPipeID, UUID targetModuleID, Object toRoute, EnumFacing facing, PromiseType type) {
         LogisticsRoute route = network.getRouteFromTo(nodeID, targetPipeID);
         if (route == null) {
-            LogisticsPipes2.logger.info("Route returned null");
+            LogisticsPipes2.LOGGER.error("Route returned null");
             return false;
         }
         waitingToRoute.add(new PendingToRoute(route, targetModuleID, toRoute, type, facing));
@@ -489,7 +491,7 @@ public class TileGenericPipe extends TileEntity implements IRoutable, IPipe, ITi
     }
 
     public enum ConnectionTypes {
-        NONE, PIPE, BLOCK, FORCENONE
+        NONE, PIPE, BLOCK, FORCE_NONE
     }
 }
 

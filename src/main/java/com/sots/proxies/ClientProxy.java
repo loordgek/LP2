@@ -11,7 +11,7 @@ public class ClientProxy extends Proxy {
     public ParticleRenderer particleRender = new ParticleRenderer();
 
     @Override
-    public void preInit() {
+    public void setup() {
         OBJLoader.INSTANCE.addDomain(References.MODID);
     }
 
@@ -21,6 +21,6 @@ public class ClientProxy extends Proxy {
 
     @Override
     public EntityPlayer clientPlayer() {
-        return Minecraft.getMinecraft().player;
+        return Minecraft.getInstance().player;
     }
 }

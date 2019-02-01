@@ -68,11 +68,11 @@ public class Router {
                                         }
                                         if (current.connections() == 2 && !current.isDestination()) {
                                             current.getMember().spawnParticle(0.000f, 1.000f, 1.000f);
-                                            tryLookahead(current, EnumFacing.getFront(i));
+                                            tryLookahead(current, EnumFacing.byIndex(i));
                                         } else {
                                             _node.h_Cost(target);
 
-                                            _node.parent = new Tuple<>(current, EnumFacing.getFront(i));
+                                            _node.parent = new Tuple<>(current, EnumFacing.byIndex(i));
                                             _node.p_cost = current.p_cost + _node.t_cost;
                                             if (!open.contains(_node) && !closed.contains(_node)) {
                                                 open.offer(_node);

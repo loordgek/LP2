@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class Proxy {
 
-    public void preInit() { }
+    public void setup() { }
 
     public void init() { }
 

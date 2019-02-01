@@ -16,16 +16,16 @@ public class PassiveDestinationSelector {
     public void registerPassiveDestination(UUID id, Item item) {
         if (destinations.containsKey(item)) {
             if (destinations.get(item).contains(id)) {
-                LogisticsPipes2.logger.warn("Tried to register passive destination [" + id + "] for item [" + item + "] twice");
+                LogisticsPipes2.LOGGER.warn("Tried to register passive destination [" + id + "] for item [" + item + "] twice");
             } else {
                 destinations.get(item).add(id);
-                LogisticsPipes2.logger.info("Registered passive destination [" + id + "] for item [" + item + "]");
+                LogisticsPipes2.LOGGER.info("Registered passive destination [" + id + "] for item [" + item + "]");
             }
         } else {
             List<UUID> tmp = new ArrayList<UUID>();
             tmp.add(id);
             destinations.put(item, tmp);
-            LogisticsPipes2.logger.info("Registered passive destination [" + id + "] for item [" + item + "]");
+            LogisticsPipes2.LOGGER.info("Registered passive destination [" + id + "] for item [" + item + "]");
         }
     }
 
@@ -33,15 +33,15 @@ public class PassiveDestinationSelector {
         if (destinations.containsKey(item)) {
             if (destinations.get(item).contains(id)) {
                 destinations.get(item).remove(id);
-                LogisticsPipes2.logger.info("Unregistered passive destination [" + id + "] for item [" + item + "]");
+                LogisticsPipes2.LOGGER.info("Unregistered passive destination [" + id + "] for item [" + item + "]");
                 if (destinations.get(item).size() == 0) {
                     destinations.remove(item);
                 }
             } else {
-                LogisticsPipes2.logger.info("Tried to unregister passive destination [" + id + "] for item [" + item + "] despite it not being a passive destination");
+                LogisticsPipes2.LOGGER.info("Tried to unregister passive destination [" + id + "] for item [" + item + "] despite it not being a passive destination");
             }
         } else {
-            LogisticsPipes2.logger.info("Tried to unregister passive destination [" + id + "] for item [" + item + "] despite it not being a passive destination");
+            LogisticsPipes2.LOGGER.info("Tried to unregister passive destination [" + id + "] for item [" + item + "] despite it not being a passive destination");
         }
     }
 

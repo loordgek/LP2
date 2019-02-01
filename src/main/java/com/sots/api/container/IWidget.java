@@ -1,14 +1,13 @@
 package com.sots.api.container;
 
-import com.sots.api.KeyInfo;
 import com.sots.api.util.EnumMouseButton;
 import com.sots.api.util.LPSide;
 import com.sots.api.util.Rectangle;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -18,24 +17,17 @@ public interface IWidget {
 
     int getID();
 
-    void renderForeGround(int mouseX, int mouseY);
+    void renderForeGround(int mouseX, int mouseY, float partialTicks);
 
-    void render(int mouseX, int mouseY);
+    void render(int mouseX, int mouseY, float partialTicks);
 
-    void renderBackRound(int mouseX, int mouseY);
+    void renderBackRound(int mouseX, int mouseY, float partialTicks);
 
+    boolean onWidgetClicked(double mouseX, double mouseY, EnumMouseButton button, boolean shiftDown);
 
-    void onWidgetClicked(int mouseX, int mouseY, EnumMouseButton button, boolean shiftDown, EntityPlayer player, LPSide side);
+    boolean onClicked(double mouseX, double mouseY, EnumMouseButton button, boolean shiftDown);
 
-    void onClicked(int mouseX, int mouseY, EnumMouseButton button, boolean shiftDown, EntityPlayer player, LPSide side);
-
-    void onScrollWheel(int wheel, int mouseX, int mouseY, boolean shiftDown);
-
-    void mouseClickMove(int mouseX, int mouseY, EnumMouseButton button, long timeSinceLastClick, EntityPlayer player);
-
-    void onMouseDrag(int mouseX, int mouseY, EnumMouseButton button, long timeSinceLastClick, EntityPlayer player, Set<IWidget> draggedWidgets, LPSide side);
-
-    void mouseReleased(int mouseX, int mouseY, int state);
+    boolean onScrollWheel(double wheel, double mouseX, double mouseY, boolean shiftDown);
 
     void onWidgetClosed(EntityPlayer player);
 
@@ -57,12 +49,12 @@ public interface IWidget {
         return getBounds().getHeight();
     }
 
-    void keyTyped(char typedChar, int keyCode, boolean keyPressed, EntityPlayer player, LPSide side);
+    boolean keyTyped(char typedChar, int keyCode);
 
     @Nullable
     IWidget getParent();
 
     void setParent(@Nonnull IWidget parent);
 
-    void addTooltip(int mouseX, int mouseY, List<String> tooltips, boolean shift, EntityPlayer player);
+    void addTooltip(int mouseX, int mouseY, List<ITextComponent> tooltips, boolean shift, EntityPlayer player);
 }

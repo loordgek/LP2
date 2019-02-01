@@ -11,8 +11,6 @@ public interface IResource<T> {
 
     T get();
 
-    Class<T> type();
-
     void render(int x, int y, int mouseX, int mouseY);
 
     void addTooltip(int mouseX, int mouseY, List<String> tooltips, boolean shift, EntityPlayer player);

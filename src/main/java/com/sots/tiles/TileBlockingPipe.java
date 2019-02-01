@@ -1,16 +1,22 @@
 package com.sots.tiles;
 
 import com.sots.LogisticsPipes2;
-import com.sots.api.LPRoutedObject;
 import com.sots.util.Connections;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 
 import java.util.ArrayList;
 
+
 public class TileBlockingPipe extends TileGenericPipe {
 
+
     private boolean redstone;
+
+    public TileBlockingPipe(TileEntityType<?> tileEntityTypeIn) {
+        super(tileEntityTypeIn);
+    }
 
     public void onLoad() {
         super.onLoad();
@@ -19,7 +25,7 @@ public class TileBlockingPipe extends TileGenericPipe {
 
 
     public void setRedstoneState(boolean redstone) {
-        LogisticsPipes2.logger.info(redstone);
+        LogisticsPipes2.LOGGER.info(redstone);
         if (hasNetwork() && this.redstone != redstone) {
             network.purgeNetwork();
         }
@@ -51,7 +57,7 @@ public class TileBlockingPipe extends TileGenericPipe {
         return 0;
     }
 
-    public ArrayList<String> checkConnections(IBlockAccess world, BlockPos pos) {
+    public ArrayList<String> checkConnections(IBlockReader world, BlockPos pos) {
         ArrayList<String> hidden = new ArrayList<String>();
         if (down != ConnectionTypes.PIPE) {
             hidden.add(Connections.DOWN.toString());
@@ -82,6 +88,7 @@ public class TileBlockingPipe extends TileGenericPipe {
             super.network();
         }
     }
+/*
 
     @Override
     public boolean catchItem(LPRoutedObject item) {
@@ -91,6 +98,7 @@ public class TileBlockingPipe extends TileGenericPipe {
             return super.catchItem(item);
         }
     }
+*/
 
 
 }

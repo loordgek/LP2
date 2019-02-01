@@ -1,48 +1,61 @@
 package com.sots;
 
-import com.sots.network.LPPacketHandler;
+import com.sots.pipe.PipeBasic;
+import com.sots.proxies.ClientProxy;
 import com.sots.proxies.Proxy;
+import com.sots.proxies.ServerProxy;
+import com.sots.tiles.TileBasicPipe;
+import com.sots.tiles.TileNetworkCore;
+import com.sots.tiles.TileRoutedPipe;
 import com.sots.util.References;
+import com.sots.util.TileRegistryUtil;
 import com.sots.util.registries.CapabilityInit;
-import com.sots.world.LPWorldGen;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLModLoadingContext;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = References.MODID, name = References.MODNAME, version = References.VERSION, dependencies = "", useMetadata = true)
+@Mod(References.MODID)
 public class LogisticsPipes2 {
 
-    @SidedProxy(clientSide = "com.sots.proxies.ClientProxy", serverSide = "com.sots.proxies.ServerProxy")
-    public static Proxy proxy;
+    public static LogisticsPipes2 INSTANCE;
 
-    @Mod.Instance
-    public static LogisticsPipes2 instance = new LogisticsPipes2();
+    public static final Logger LOGGER = LogManager.getLogger();
 
-    public static Logger logger;
+    public static Proxy PROXY;
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
-        proxy.preInit();
+    public LogisticsPipes2(){
+        PROXY = DistExecutor.runForDist(()->()->new ClientProxy(), ()->()->new ServerProxy());
+        FMLModLoadingContext.get().getModEventBus().addListener(this::preInit);
+        FMLModLoadingContext.get().getModEventBus().addListener(this::onBlockRegistryRegister);
+        FMLModLoadingContext.get().getModEventBus().addListener(this::onItemRegistryRegister);
+        FMLModLoadingContext.get().getModEventBus().addListener(this::onTileEntityRegistryRegister);
+        INSTANCE = this;
+    }
+
+    public void preInit(FMLCommonSetupEvent event) {
+        PROXY.setup();
         CapabilityInit.init();
-        LPPacketHandler.registerMessages();
     }
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        proxy.init();
-        LPWorldGen worldGen = new LPWorldGen();
-        GameRegistry.registerWorldGenerator(worldGen, 0);
-        MinecraftForge.EVENT_BUS.register(worldGen);
+    public void onBlockRegistryRegister(RegistryEvent.Register<Block> event) {
+        event.getRegistry().register(new PipeBasic());
     }
 
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        proxy.postInit();
+    public void onItemRegistryRegister(RegistryEvent.Register<Item> event) {
+    }
+
+    public void onTileEntityRegistryRegister(RegistryEvent.Register<TileEntityType<? extends TileEntity>> event) {
+        TileRegistryUtil.registerTileType(event, new ResourceLocation(References.MODID, "Tilegenericpipe"), TileRoutedPipe::new);
+        TileRegistryUtil.registerTileType(event, new ResourceLocation(References.MODID, "Tilenetworkcore"), TileNetworkCore::new);
+        TileRegistryUtil.registerTileType(event, new ResourceLocation(References.MODID, "Tilebasicpipee"), TileBasicPipe::new);
     }
 }

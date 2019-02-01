@@ -3,20 +3,21 @@ package com.sots.api;
 import com.sots.LogisticsPipes2;
 import com.sots.api.util.data.Triple;
 import com.sots.routing.PendingToRoute;
-import com.sots.routing.promises.PromiseType;
 import com.sots.tiles.TileGenericPipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,7 +27,6 @@ public abstract class LPRoutedObject<T> {
     public final int TICK_MAX = 10;
     private final Deque<EnumFacing> route;
     private final T contents;
-    //private Triple<Double, Double, Double> position;
     private final UUID ID;
     private final UUID moduleUUid;
     public int ticks;
@@ -42,24 +42,22 @@ public abstract class LPRoutedObject<T> {
         this.moduleUUid = moduleUUid;
         this.ticks = 0;
         this.contents = copyContent(content);
-        //this.position = new Triple<Double, Double, Double>(x, y, z);
         this.ID = UUID.randomUUID();
         this.destination = destination;
     }
 
     protected LPRoutedObject(NBTTagCompound compound) {
-        this.ticks = compound.getInteger("ticks");
-        //this.position=new Triple<Double, Double, Double>(x, y, z);
+        this.ticks = compound.getInt("ticks");
         this.ID = compound.getUniqueId("UID");
         this.moduleUUid = compound.getUniqueId("moduleID");
         this.contents = readContentFromNBT(compound);
-        NBTTagList tagList = compound.getTagList("route", Constants.NBT.TAG_COMPOUND);
+        int[] intArray = compound.getIntArray("route");
         Deque<EnumFacing> routingInfo = new ArrayDeque<>();
-        for (int i = 0; i < tagList.tagCount(); i++) {
-            routingInfo.add(EnumFacing.VALUES[tagList.getIntAt(i)]);
+        for (int i1 : intArray) {
+            routingInfo.add(EnumFacing.BY_INDEX[i1]);
         }
         this.route = routingInfo;
-        this.heading = (EnumFacing.VALUES[compound.getInteger("heading")]);
+        this.heading = (EnumFacing.BY_INDEX[compound.getInt("heading")]);
     }
 
     public static LPRoutedObject readFromNBT(NBTTagCompound compound, TileGenericPipe holder) {
@@ -67,11 +65,10 @@ public abstract class LPRoutedObject<T> {
         try {
             //LPRoutedObject item = LPRoutedObject.makeLPRoutedObjectFromContent(ticks, id, Class.forName(compound.getString("type")));
             LPRoutedObject item = types.get(Class.forName(compound.getString("type"))).getRoutedObject(compound);
-            item.setHeading(EnumFacing.VALUES[compound.getInteger("heading")]);
             item.setHolding(holder);
             return item;
         } catch (Exception e) {
-            LogisticsPipes2.logger.info("Something went wrong", e);
+            LogisticsPipes2.LOGGER.info("Something went wrong", e);
             return null;
         }
 
@@ -152,19 +149,17 @@ public abstract class LPRoutedObject<T> {
 
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger("heading", heading.ordinal());
+        tag.setInt("heading", heading.ordinal());
         tag.setUniqueId("UID", this.ID);
         tag.setUniqueId("moduleID", this.moduleUUid);
         writeContentToNBT(tag);
-        tag.setInteger("ticks", this.ticks);
+        tag.setInt("ticks", this.ticks);
         tag.setString("type", getContentType().getName());
-        NBTTagList routeList = new NBTTagList();
+        List<Integer> list = new ArrayList<>();
         for (EnumFacing node : route) {
-            NBTTagCompound nodeTag = new NBTTagCompound();
-            //nodeTag.setUniqueId("UID", node.getKey());
-            nodeTag.setInteger("heading", node.ordinal());
-            routeList.appendTag(nodeTag);
+            list.add(node.getIndex());
         }
+        NBTTagIntArray routeList = new NBTTagIntArray(list);
         tag.setTag("route", routeList);
         return tag;
     }
@@ -173,10 +168,14 @@ public abstract class LPRoutedObject<T> {
 
     public abstract T readContentFromNBT(NBTTagCompound compound);
 
-    @SideOnly(Side.CLIENT)
     public abstract void render(TileGenericPipe te, float partialTicks);
 
-    public abstract void spawnInWorld(World world, double x, double y, double z);
+    public void spawnInWorld(World world, double x, double y, double z) { }
+
+    public void spawnInWorld() {
+        BlockPos pos = getHolding().getPos();
+        spawnInWorld(getHolding().getWorld(), pos.getX(), pos.getY(), pos.getZ());
+    }
 
     public abstract void putInBlock(TileEntity te);
 }

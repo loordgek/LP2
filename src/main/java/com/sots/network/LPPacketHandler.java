@@ -1,22 +1,23 @@
 package com.sots.network;
 
-import com.sots.network.message.MessagePipeContentUpdate;
-import com.sots.network.message.MessageWidgetClicked;
-import com.sots.network.message.MessageWidgetContainerClicked;
 import com.sots.util.References;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+
+import java.util.Objects;
 
 public class LPPacketHandler {
-    public static SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(References.MODID);
-
-    private static int id = 0;
-
-    public static void registerMessages() {
-        INSTANCE.registerMessage(MessagePipeContentUpdate.MessageHolder.class, MessagePipeContentUpdate.class, id++, Side.CLIENT);
-        INSTANCE.registerMessage(MessageWidgetClicked.handler.class, MessageWidgetClicked.class, id++, Side.SERVER);
-        INSTANCE.registerMessage(MessageWidgetContainerClicked.handler.class, MessageWidgetContainerClicked.class, id++, Side.SERVER);
+    public static final ResourceLocation NETID = new ResourceLocation(References.MODID, "net");
+    private static int netID;
+    public static SimpleChannel channel;
+    static {
+        channel = NetworkRegistry.ChannelBuilder.named(NETID).
+                clientAcceptedVersions(s -> Objects.equals(s, "1")).
+                serverAcceptedVersions(s -> Objects.equals(s, "1")).
+                networkProtocolVersion(() -> "1").
+                simpleChannel();
     }
+
 
 }

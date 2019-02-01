@@ -1,41 +1,24 @@
 package com.sots.block;
 
-import com.sots.util.References;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockOreRutile extends LPBlockBase {
+public class BlockOreRutile extends Block {
     public BlockOreRutile() {
-        super(Material.ROCK);
-        setUnlocalizedName(References.NAME_ORE_RUTILE);
-        setRegistryName(References.RN_ORE_RUTILE);
-        setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
-        setHardness(3.0f);
-        setResistance(15.0f);
-        setSoundType(SoundType.STONE);
-        setHarvestLevel("pickaxe", 3);
-        setOreName("oreTitanium");
+        super(Block.Builder.create(Material.ROCK).hardnessAndResistance(3, 15).sound(SoundType.STONE));
+
     }
 
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
-
-    @Override
+/*    @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ArrayList<ItemStack> ret = new ArrayList<>();
 
@@ -43,5 +26,11 @@ public class BlockOreRutile extends LPBlockBase {
             ret.add(new ItemStack(ItemRegistry.shard_rutile, 1, 0));
         }
         return ret;
+    }*/
+
+    @Override
+    public void getDrops(IBlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
+        //drops.add(new ItemStack())
     }
+
 }

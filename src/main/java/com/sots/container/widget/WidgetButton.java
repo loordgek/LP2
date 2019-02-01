@@ -14,7 +14,7 @@ public class WidgetButton extends Widget {
     }
 
     @Override
-    public void onClicked(int mouseX, int mouseY, EnumMouseButton button, boolean shiftDown, EntityPlayer player, LPSide side) {
-        listener.onWidgetClicked(this, button, player);
+    public boolean onWidgetClicked(double mouseX, double mouseY, EnumMouseButton button, boolean shiftDown) {
+        return listener.onWidgetClicked(this, button);
     }
 }

@@ -5,22 +5,21 @@ import com.sots.tiles.TileGenericPipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraft.world.IBlockReader;
 
 import java.util.ArrayList;
 
 public class ConnectionHelper {
-    public static boolean canConnectTile(IBlockAccess world, BlockPos pos) {
+    public static boolean canConnectTile(IBlockReader world, BlockPos pos) {
         return world.getTileEntity(pos) != null;
     }
 
-    public static boolean isPipe(IBlockAccess worldIn, BlockPos pos, EnumFacing facing) {
+    public static boolean isPipe(IBlockReader worldIn, BlockPos pos, EnumFacing facing) {
         TileEntity target = AccessHelper.getTileSafe(worldIn, pos, facing);
         return (target instanceof IPipe);
     }
 
-    public static ArrayList<String> checkForPipes(IBlockAccess world, BlockPos pos) {
+    public static ArrayList<String> checkForPipes(IBlockReader world, BlockPos pos) {
         ArrayList<String> hidden = new ArrayList<String>();
         //The Center Block of the Pipe allways has to be shown, thus its never added here
 
@@ -63,7 +62,7 @@ public class ConnectionHelper {
         return hidden;
     }
 
-    public static TileGenericPipe getAdjacentPipe(IBlockAccess worldIn, BlockPos pos, EnumFacing facing) {
+    public static TileGenericPipe getAdjacentPipe(IBlockReader worldIn, BlockPos pos, EnumFacing facing) {
         if (isPipe(worldIn, pos, facing)) {
             TileGenericPipe target = (TileGenericPipe) AccessHelper.getTileSafe(worldIn, pos, facing);
             if (target != null) {

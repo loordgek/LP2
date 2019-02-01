@@ -10,15 +10,17 @@ import java.util.List;
 import java.util.UUID;
 
 public class FluidStackResource implements IResource<FluidStack> {
+    private final FluidStack fluidStack;
+
+    public FluidStackResource(FluidStack fluidStack) {
+        this.fluidStack = fluidStack;
+    }
+
     @Override
     public FluidStack get() {
         return null;
     }
 
-    @Override
-    public Class<FluidStack> type() {
-        return null;
-    }
 
     @Override
     public void render(int x, int y, int mouseX, int mouseY) {

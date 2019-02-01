@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.capabilities.OptionalCapabilityInstance;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,15 +53,10 @@ public interface IModule extends ICapabilitySerializable<NBTTagCompound> {
         return null;
     }
 
+    @Nonnull
     @Override
-    default boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return false;
-    }
-
-    @Nullable
-    @Override
-    default <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        return null;
+    default <T> OptionalCapabilityInstance<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+        return OptionalCapabilityInstance.empty();
     }
 
     @Override
@@ -91,10 +86,6 @@ public interface IModule extends ICapabilitySerializable<NBTTagCompound> {
     void onAdd(World world, BlockPos pos);
 
     void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos);
-
-    default void addScheduledTask(Runnable runnable){
-        FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(runnable);
-    }
 
     enum ModuleType {
         SINK, SORT, CRAFT, EXTRACT, NONE

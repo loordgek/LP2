@@ -11,6 +11,7 @@ import java.util.UUID;
 public class RequestNode {
     private final Type type;
     private final List<RequestNode> supRequests = new ArrayList<>();
+    private final IRequestLogger logger;
     @Nullable
     private final RequestNode parentNode;
     private final RequestNode root;
@@ -18,8 +19,9 @@ public class RequestNode {
     private final ICraftingTemplate template;
     private final List<LPRoutedObject> onRoute = new ArrayList<>();
     private final UUID ID;
-    public RequestNode(Type type, @Nullable RequestNode parentNode, @Nullable ICraftingTemplate template) {
+    public RequestNode(Type type, @Nullable IRequestLogger logger, @Nullable RequestNode parentNode, @Nullable ICraftingTemplate template) {
         this.type = type;
+        this.logger = logger;
         this.parentNode = parentNode;
 
         this.root = this;
@@ -74,6 +76,12 @@ public class RequestNode {
     protected void cancelIntarnel() {
         supRequests.forEach(RequestNode::cancelIntarnel);
         onRoute.forEach(LPRoutedObject::cancel);
+    }
+
+    public IRequestLogger getLogger() {
+        if (!isRoot())
+            return getRoot().getLogger();
+        return logger;
     }
 
     enum Type {

@@ -5,5 +5,5 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public interface IWidgetButtonListener {
 
-    void onWidgetClicked(WidgetButton widgetButton, EnumMouseButton button, EntityPlayer player);
+    boolean onWidgetClicked(WidgetButton widgetButton, EnumMouseButton button);
 }

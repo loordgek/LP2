@@ -14,7 +14,6 @@ import java.util.Set;
 
 public class LPContainer extends Container {
     public final List<IWidget> widgets = new ArrayList<>();
-    public final Set<IWidget> draggedWidgets = new HashSet<>();
 
     public LPContainer(LPSide side) {
         if (side.isServer())
@@ -28,10 +27,6 @@ public class LPContainer extends Container {
 
     public void initWidgets(LPSide side){
 
-    }
-
-    public void keyTyped(char typedChar, int keyCode, boolean keyPressed, EntityPlayer player, LPSide side){
-        widgets.forEach(widget -> widget.keyTyped(typedChar, keyCode, keyPressed, player));
     }
 
     public void addWidget(IWidget widget){

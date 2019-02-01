@@ -1,31 +1,17 @@
 package com.sots.world;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.sots.LogisticsPipes2;
-import com.sots.util.Config;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockMatcher;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenMinable;
-import net.minecraftforge.event.world.ChunkDataEvent;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class LPWorldGen implements IWorldGenerator {
+    @Override
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+
+    }/*
     public static ArrayList<OreGen> generators = new ArrayList<OreGen>();
     public static ArrayList<Integer> oreDimBlacklist = new ArrayList<Integer>();
     public static HashMap<String, Boolean> retrogenMap = new HashMap<String, Boolean>();
@@ -130,4 +116,4 @@ public class LPWorldGen implements IWorldGenerator {
             }
         }
     }
-}
+*/}

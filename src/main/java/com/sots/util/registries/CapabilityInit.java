@@ -1,33 +1,30 @@
 package com.sots.util.registries;
 
-import com.sots.api.module.IModule;
 import com.sots.api.INetwork;
 import com.sots.api.LPRoutedObject;
+import com.sots.api.module.IModule;
 import com.sots.api.module.Module;
 import com.sots.tiles.TileRoutedPipe;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class CapabilityInit {
     public static void init(){
         CapabilityManager.INSTANCE.register(IModule.class, new net.minecraftforge.common.capabilities.Capability.IStorage<IModule>() {
             @Nullable
             @Override
-            public NBTBase writeNBT(net.minecraftforge.common.capabilities.Capability<IModule> capability, IModule instance, EnumFacing side) {
+            public INBTBase writeNBT(net.minecraftforge.common.capabilities.Capability<IModule> capability, IModule instance, EnumFacing side) {
                 return null;
             }
 
             @Override
-            public void readNBT(net.minecraftforge.common.capabilities.Capability<IModule> capability, IModule instance, EnumFacing side, NBTBase nbt) {
+            public void readNBT(Capability<IModule> capability, IModule instance, EnumFacing side, INBTBase nbt) {
 
             }
         }, FakeModule::new);
@@ -35,32 +32,47 @@ public class CapabilityInit {
 
     private static class FakeModule extends Module {
 
-        public FakeModule() throws IllegalAccessException {
-            throw new IllegalAccessException("dont use the default IModule cap");
+        public FakeModule(){
+
         }
 
         @Override
-        public boolean handleLPRoutedObject(TileRoutedPipe te, LPRoutedObject routedObject) {
+        public boolean execute(World world, BlockPos pos) {
             return false;
         }
 
         @Override
-        public void onConnect(INetwork network, TileRoutedPipe te) {
+        public Class<?> type() {
+            return null;
+        }
+
+        @Override
+        public ModuleType modType() {
+            return null;
+        }
+
+        @Override
+        public boolean handleLPRoutedObject(World world, BlockPos pos, LPRoutedObject routedObject) {
+            return false;
+        }
+
+        @Override
+        public void onConnect(INetwork network, World world, BlockPos pos) {
 
         }
 
         @Override
-        public void onDisconnect(INetwork network, TileRoutedPipe te) {
+        public void onDisconnect(INetwork network, World world, BlockPos pos) {
 
         }
 
         @Override
-        public void onRemoved(TileRoutedPipe te) {
+        public void onRemoved(World world, BlockPos pos) {
 
         }
 
         @Override
-        public void onAdd(TileRoutedPipe te) {
+        public void onAdd(World world, BlockPos pos) {
 
         }
     }

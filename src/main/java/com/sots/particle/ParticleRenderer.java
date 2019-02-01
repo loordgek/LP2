@@ -3,9 +3,9 @@ package com.sots.particle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 
 public class ParticleRenderer {
-    ArrayList<Particle> particles = new ArrayList<Particle>();
+    ArrayList<Particle> particles = new ArrayList<>();
 
     public void updateParticles() {
         boolean doRemove;
@@ -23,7 +23,7 @@ public class ParticleRenderer {
             if (particles.get(i) != null) {
                 if (particles.get(i) instanceof ILP2Particle) {
                     if (((ILP2Particle) particles.get(i)).alive()) {
-                        particles.get(i).onUpdate();
+                        particles.get(i).tick();
                         doRemove = false;
                     }
                 }
@@ -40,22 +40,22 @@ public class ParticleRenderer {
         float f2 = ActiveRenderInfo.getRotationYZ();
         float f3 = ActiveRenderInfo.getRotationXY();
         float f4 = ActiveRenderInfo.getRotationXZ();
-        EntityPlayer player = Minecraft.getMinecraft().player;
+        EntityPlayer player = Minecraft.getInstance().player;
 
         Particle.interpPosX = player.lastTickPosX + (player.posX - player.lastTickPosX) * pTicks;
         Particle.interpPosY = player.lastTickPosY + (player.posY - player.lastTickPosY) * pTicks;
         Particle.interpPosZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * pTicks;
         Particle.cameraViewDir = player.getLook(pTicks);
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
         GlStateManager.enableBlend();
         GlStateManager.alphaFunc(516, 0.003921569F);
         GlStateManager.disableCull();
 
         GlStateManager.depthMask(false);
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Minecraft.getInstance().textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer buffer = tess.getBuffer();
+        BufferBuilder buffer = tess.getBuffer();
 
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);

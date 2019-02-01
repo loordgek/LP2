@@ -32,18 +32,18 @@ public class ModuleInv {
     }
 
     public void onConnect(INetwork network, TileRoutedPipe te) {
-        moduleMap.forEach((uuid, iModule) -> iModule.onConnect(network, te));
+        moduleMap.forEach((uuid, iModule) -> iModule.onConnect(network, te.getWorld(), te.getPos()));
     }
 
     public void onDisconnect(INetwork network, TileRoutedPipe te) {
-        moduleMap.forEach((uuid, iModule) -> iModule.onDisconnect(network, te));
+        moduleMap.forEach((uuid, iModule) -> iModule.onDisconnect(network, te.getWorld(), te.getPos()));
     }
 
     public void onRemoved(TileRoutedPipe te) {
-        moduleMap.forEach((uuid, iModule) -> iModule.onRemoved(te));
+        moduleMap.forEach((uuid, iModule) -> iModule.onRemoved(te.getWorld(), te.getPos()));
     }
 
     public void onAdd(TileRoutedPipe te) {
-        moduleMap.forEach((uuid, iModule) -> iModule.onAdd(te));
+        moduleMap.forEach((uuid, iModule) -> iModule.onAdd(te.getWorld(), te.getPos()));
     }
 }

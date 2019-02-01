@@ -34,14 +34,14 @@ public class DijkstraRouter extends Router {
         if (junctions.containsKey(s.getId())) {
             start = junctions.get(s.getId());
         } else {
-            LogisticsPipes2.logger.info("You tried routing from a node, which was not a destination or junction.");
+            LogisticsPipes2.LOGGER.info("You tried routing from a node, which was not a destination or junction.");
             return null;
         }
 
         if (junctions.containsKey(t.getId())) {
             target = junctions.get(t.getId());
         } else {
-            LogisticsPipes2.logger.info("You tried routing to a node, which was not a destination or junction.");
+            LogisticsPipes2.LOGGER.info("You tried routing to a node, which was not a destination or junction.");
             return null;
         }
 
@@ -67,7 +67,7 @@ public class DijkstraRouter extends Router {
                                         help.getMember().spawnParticle(1.0f, 0.549f, 0.0f);
                                         help = help.parent.getKey();
                                     }
-                                    return new Triple<NetworkNode, NetworkNode, ArrayDeque<Tuple<UUID, EnumFacing>>>(start, target, route);
+                                    return new Triple<>(start, target, route);
                                 }
 
 
@@ -85,7 +85,7 @@ public class DijkstraRouter extends Router {
                                     }
                                     if (current.p_cost + distance < neighbor.p_cost) {
                                         neighbor.p_cost = current.p_cost + distance;
-                                        neighbor.parent = new Tuple<>(current, EnumFacing.getFront(i));
+                                        neighbor.parent = new Tuple<>(current, EnumFacing.byIndex(i));
                                     }
                                 }
 

@@ -1,30 +1,37 @@
 package com.sots.block;
 
 import com.sots.tiles.ITileEntityBase;
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class BlockTileBase extends LPBlockBase implements ITileEntityProvider {
+import javax.annotation.Nullable;
 
-    public BlockTileBase(Material material) {
-        super(material);
+public abstract class BlockTileBase extends Block {
+
+    public BlockTileBase(Builder properties) {
+        super(properties);
     }
 
+    @Nullable
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return null;
-    }
+    public abstract TileEntity createTileEntity(IBlockState state, IBlockReader world);
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return ((ITileEntityBase) world.getTileEntity(pos)).activate(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+    public abstract boolean hasTileEntity(IBlockState state);
+
+    @Override
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return ((ITileEntityBase) worldIn.getTileEntity(pos)).activate(worldIn, pos, state, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override
@@ -34,7 +41,7 @@ public class BlockTileBase extends LPBlockBase implements ITileEntityProvider {
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        super.breakBlock(worldIn, pos, state);
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
     }
 }

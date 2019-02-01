@@ -1,4 +1,4 @@
 package com.sots.api;
 
-public class INetworkListener {
+public interface INetworkListener {
 }

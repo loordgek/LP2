@@ -16,7 +16,7 @@ public class WeightComparator implements Comparator<NetworkNode> {
             if (o1.h_cost > o2.h_cost)
                 return 1;
         } catch (NullPointerException npe) {
-            LogisticsPipes2.logger.log(Level.ALL, "Router ran into a Null node!");
+            LogisticsPipes2.LOGGER.log(Level.ALL, "Router ran into a Null node!");
         }
         return 0;
     }

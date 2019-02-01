@@ -1,25 +1,21 @@
 package com.sots;
 
-import com.sots.client.gui.LPGuiContainer;
 import com.sots.pipe.BlockGenericPipe;
 import com.sots.util.References;
 import com.sots.util.registries.PipeRegistry;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import org.lwjgl.input.Keyboard;
 
 
-@Mod.EventBusSubscriber(modid = References.MODID, value = Side.CLIENT)
+@Mod.EventBusSubscriber(modid = References.MODID, value = Dist.CLIENT)
 public class ClientEventHandler {
 
     @SubscribeEvent
@@ -31,19 +27,19 @@ public class ClientEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
-            LogisticsPipes2.proxy.getParticleRender().updateParticles();
+            LogisticsPipes2.PROXY.getParticleRender().updateParticles();
         }
     }
 
     @SubscribeEvent
     public static void onRenderAfterWorld(RenderWorldLastEvent event) {
         GlStateManager.pushMatrix();
-        LogisticsPipes2.proxy.getParticleRender().renderParticles(event.getPartialTicks());
+        LogisticsPipes2.PROXY.getParticleRender().renderParticles(event.getPartialTicks());
         GlStateManager.popMatrix();
     }
 
     @SubscribeEvent
     public static void onModelRegistry(ModelRegistryEvent event) {
-        PipeRegistry.registry.forEach(BlockGenericPipe::initModel);
+     //   PipeRegistry.registry.forEach(BlockGenericPipe::initModel);
     }
 }

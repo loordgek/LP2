@@ -17,7 +17,7 @@ public final class SpecialInventoryManager {
                 return sip.getSpecialInventory(entity, facing);
         }
 
-        if (entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)){
+        if (entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing).isPresent()){
 
         }
 

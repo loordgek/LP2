@@ -1,32 +1,31 @@
 package com.sots.pipe;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.UnmodifiableIterator;
 import com.sots.block.BlockTileBase;
 import com.sots.tiles.TileGenericPipe;
-import com.sots.tiles.TileGenericPipe.ConnectionTypes;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.Models;
 import net.minecraftforge.common.model.TRSRTransformation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BlockGenericPipe extends BlockTileBase {
 
-    protected final List<String> hidden = new ArrayList<String>();
+    // TODO: 2/1/2019 you can not have fields ina block
+    protected final List<String> hidden = new ArrayList<>();
     public final IModelState state = new IModelState() {
         private final Optional<TRSRTransformation> value = Optional.of(TRSRTransformation.identity());
 
@@ -43,20 +42,14 @@ public class BlockGenericPipe extends BlockTileBase {
                     }
                 }
             }
-            return Optional.absent();
+            return Optional.empty();
         }
+
 
     };
 
     public BlockGenericPipe(Material materialIn) {
-        super(materialIn);
-        setHardness(3.0f);
-        setResistance(10.0f);
-        setSoundType(SoundType.METAL);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
+        super(Builder.create(materialIn).hardnessAndResistance(3f, 10f).sound(SoundType.METAL));
     }
 
     @Override
@@ -64,9 +57,10 @@ public class BlockGenericPipe extends BlockTileBase {
         return EnumBlockRenderType.MODEL;
     }
 
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-
+    // TODO: 2/1/2019
+    /*@Override
+    public VoxelShape getCollisionShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+        //return super.getCollisionShape(state, worldIn, pos);
         double x1 = 0.275;
         double y1 = 0.275;
         double z1 = 0.275;
@@ -74,8 +68,8 @@ public class BlockGenericPipe extends BlockTileBase {
         double y2 = 0.725;
         double z2 = 0.725;
 
-        if (source.getTileEntity(pos) instanceof TileGenericPipe) {
-            TileGenericPipe pipe = (TileGenericPipe) source.getTileEntity(pos);
+        if (worldIn.getTileEntity(pos) instanceof TileGenericPipe) {
+            TileGenericPipe pipe = (TileGenericPipe) worldIn.getTileEntity(pos);
             if (pipe.down != ConnectionTypes.NONE) {
                 y1 = 0;
             }
@@ -95,11 +89,22 @@ public class BlockGenericPipe extends BlockTileBase {
                 x2 = 1;
             }
         }
-        return new AxisAlignedBB(x1, y1, z1, x2, y2, z2);
-    }
+        return new VoxelShape()
+    }*/
 
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         ((TileGenericPipe) worldIn.getTileEntity(pos)).neighborChanged(state, worldIn, pos, blockIn, fromPos);
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(IBlockState state, IBlockReader world) {
+        return null;
+    }
+
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return false;
     }
 }

@@ -2,39 +2,33 @@ package com.sots.tiles;
 
 import com.sots.api.LPRoutedObject;
 import com.sots.api.util.data.Triple;
-import com.sots.event.LPMakePromiseEvent;
-import com.sots.routing.PendingToRoute;
-import com.sots.routing.interfaces.IDestination;
 import com.sots.routing.interfaces.IPipe;
 import com.sots.routing.interfaces.IRoutable;
 import com.sots.routing.promises.LogisticsPromise;
 import com.sots.routing.promises.PromiseType;
 import com.sots.util.Connections;
+import com.sots.util.holder.TileHolder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileRoutedPipe extends TileGenericPipe implements IRoutable, IPipe, IDestination {
+public class TileRoutedPipe extends TileGenericPipe implements IRoutable, IPipe {
 
     protected boolean hasInv = false;
     protected int ticksTillSparkle = 0;
     protected List<LogisticsPromise> promises = new ArrayList<>();
 
-
     public TileRoutedPipe() {
-        MinecraftForge.EVENT_BUS.register(this);
+        super(TileHolder.TILE_ROUTED_PIPE);
     }
 
-    public ArrayList<String> checkConnections(IBlockAccess world, BlockPos pos) {
+
+    public ArrayList<String> checkConnections(IBlockReader world, BlockPos pos) {
         ArrayList<String> hidden = new ArrayList<String>();
         if (down != ConnectionTypes.BLOCK) {
             hidden.add(Connections.C_DOWN.toString());
@@ -95,12 +89,6 @@ public class TileRoutedPipe extends TileGenericPipe implements IRoutable, IPipe,
         return 1;
     }
 
-    @SubscribeEvent
-    public void receivePromise(LPMakePromiseEvent event) {
-        if (event.getTargetNode().equals(nodeID)) {
-            promises.add(event.getPromise());
-        }
-    }
 
     public void onItemCatch(LPRoutedObject item) {
         if (!promises.isEmpty()) {
@@ -112,46 +100,9 @@ public class TileRoutedPipe extends TileGenericPipe implements IRoutable, IPipe,
     }
 
     @Override
-    protected void network() {
-        super.network();
-        if (this.hasNetwork) {
-            for (int i = 0; i < 6; i++) {
-                if (hasInventoryOnSide(i)) {
-                    network.registerDestination(this.nodeID, EnumFacing.getFront(i));
-                    break;
-                }
-
-            }
-        }
-    }
-
-    @Override
-    public boolean catchItem(LPRoutedObject item) {
-        onItemCatch(item);
-        return super.catchItem(item);
-    }
-
-    @Override
-    public void update() {
-        super.update();
+    public void tick() {
+        super.tick();
         ticksTillSparkle += 1;
-        if (this.hasNetwork && !(network.getNodeByID(this.nodeID).isDestination())) {
-            for (int i = 0; i < 6; i++) {
-                if (hasInventoryOnSide(i)) {
-                    network.registerDestination(this.nodeID, EnumFacing.getFront(i));
-                    break;
-                }
-            }
-        } else if (this.hasNetwork && (network.getNodeByID(this.nodeID).isDestination())) {
-            for (int i = 0; i < 6; i++) {
-                if (hasInventoryOnSide(i))
-                    hasInv = true;
-            }
-            if (!hasInv) {
-                network.unregisterDestination(this.nodeID);
-            }
-
-        }
         if (ticksTillSparkle == 10) {
             if (!promises.isEmpty()) {
                 promises.forEach(promise -> {

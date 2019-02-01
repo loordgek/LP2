@@ -10,14 +10,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class ItemStackResource implements IResource<ItemStack> {
-    @Override
-    public ItemStack get() {
-        return null;
+    private final ItemStack stack;
+
+    public ItemStackResource(ItemStack stack) {
+        this.stack = stack;
     }
 
     @Override
-    public Class<ItemStack> type() {
-        return null;
+    public ItemStack get() {
+        return stack;
     }
 
     @Override

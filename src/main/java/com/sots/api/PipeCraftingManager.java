@@ -7,12 +7,12 @@ import java.util.Optional;
 
 public class PipeCraftingManager {
     private ICraftingModule blockingCraft;
-    private List<ICraftingModule>
+    private List<ICraftingModule> craftingModules;
     /**
      * @return the module that is using the crafter, Optional.empty if it was not blocked
      */
     public Optional<ICraftingModule> getBlockingCraft(){
-        return blockingCraft != null ? Optional.of(blockingCraft) : Optional.empty();
+        return Optional.ofNullable(blockingCraft);
     }
 
     public void setBlockingCraft(ICraftingModule module){

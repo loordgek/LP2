@@ -1,6 +1,5 @@
 package com.sots.api.container;
 
-import com.sots.api.KeyInfo;
 import com.sots.api.util.LPSide;
 
 public interface IWidgetContainer extends IWidget {

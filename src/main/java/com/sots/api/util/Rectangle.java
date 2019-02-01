@@ -32,7 +32,11 @@ public class Rectangle {
         return this == NULL;
     }
 
-    public boolean contains(int X, int Y){
+    public boolean containsD(double mouseX, double mouseY){
+        return contains((int) mouseX, (int) mouseY);
+    }
+
+    public boolean contains(int mouseX, int mouseY){
         int w = this.width;
         int h = this.height;
         if ((w | h) < 0) {
@@ -42,13 +46,13 @@ public class Rectangle {
         // Note: if either dimension is zero, tests below must return false...
         int x = this.x;
         int y = this.y;
-        if (X < x || Y < y) {
+        if (mouseX < x || mouseY < y) {
             return false;
         }
         w += x;
         h += y;
         //    overflow || intersect
-        return ((w < x || w > X) && (h < y || h > Y));
+        return ((w < x || w > mouseX) && (h < y || h > mouseY));
     }
 
     @Override

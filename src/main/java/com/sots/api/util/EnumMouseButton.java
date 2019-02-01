@@ -2,7 +2,7 @@ package com.sots.api.util;
 
 public enum EnumMouseButton {
     RIGHTCLICK(0),
-    MIDDleCLICK(1),
+    MIDDlECLICK(1),
     LEFTCLICK(2),
     OTHERCLICK(-1);
 
@@ -28,19 +28,19 @@ public enum EnumMouseButton {
     }
 
     public boolean isMiddleClick(){
-        return this == MIDDleCLICK;
+        return this == MIDDlECLICK;
     }
 
     public boolean isLeftClick(){
         return this == LEFTCLICK;
     }
 
-    public static EnumMouseButton getEnumButtonFromID(int mouseButton){
+    public static EnumMouseButton getButtonFromID(int mouseButton){
         switch (mouseButton){
             case 0:
                 return EnumMouseButton.RIGHTCLICK;
             case 1:
-                return EnumMouseButton.MIDDleCLICK;
+                return EnumMouseButton.MIDDlECLICK;
             case 3:
                 return EnumMouseButton.LEFTCLICK;
             default:
